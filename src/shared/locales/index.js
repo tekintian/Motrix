@@ -42,38 +42,8 @@ export const getLanguage = (locale = 'en-US') => {
     return locale
   }
 
-  if (locale.startsWith('ar')) {
-    return 'ar'
-  }
-
-  if (locale.startsWith('de')) {
-    return 'de'
-  }
-
   if (locale.startsWith('en')) {
     return 'en-US'
-  }
-
-  if (locale.startsWith('es')) {
-    return 'es'
-  }
-
-  if (locale.startsWith('fr')) {
-    return 'fr'
-  }
-
-  if (locale.startsWith('it')) {
-    return 'it'
-  }
-
-  // If there is a pt-PT translation in the future,
-  // here will fallback to pt-PT.
-  if (locale.startsWith('pt')) {
-    return 'pt-BR'
-  }
-
-  if (locale === 'zh-HK') {
-    return 'zh-TW'
   }
 
   if (locale.startsWith('zh')) {
