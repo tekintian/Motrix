@@ -889,22 +889,22 @@ export default class Application extends EventEmitter {
     })
 
     this.on('help:official-website', () => {
-      const url = 'https://motrix.app/'
+      const url = 'https://dev.tekin.cn/'
       this.openExternal(url)
     })
 
     this.on('help:manual', () => {
-      const url = 'https://motrix.app/manual'
+      const url = 'https://api.tekin.cn/motrix/manual'
       this.openExternal(url)
     })
 
     this.on('help:release-notes', () => {
-      const url = 'https://motrix.app/release'
+      const url = 'https://api.tekin.cn/motrix/release'
       this.openExternal(url)
     })
 
     this.on('help:report-problem', () => {
-      const url = 'https://motrix.app/report'
+      const url = 'https://api.tekin.cn/motrix/report'
       this.openExternal(url)
     })
   }

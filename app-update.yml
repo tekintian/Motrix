@@ -1,2 +1,2 @@
 provider: generic
-url: 'https://dl.motrix.app/releases/'
+url: 'https://api.tekin.cn/motrix/releases?tag='

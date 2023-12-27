@@ -1,21 +1,21 @@
 <template>
   <el-row class="copyright">
     <el-col :span="6" class="copyright-left">
-      <a target="_blank" rel="noopener noreferrer" href="https://motrix.app/">
-        &copy;{{ year }} Motrix
+      <a target="_blank" rel="noopener noreferrer" href="https://dev.tekin.cn/">
+        &copy;{{ year }} TekinTian
       </a>
     </el-col>
     <el-col :span="18" class="copyright-right">
-      <a target="_blank" rel="noopener noreferrer" href="https://motrix.app/license">
+      <a target="_blank" rel="noopener noreferrer" href="https://api.tekin.cn/motrix/license">
         {{ $t('about.license') }}
       </a>
-      <a target="_blank" rel="noopener noreferrer" href="https://motrix.app/about">
+      <a target="_blank" rel="noopener noreferrer" href="https://api.tekin.cn/motrix/about">
         {{ $t('about.about') }}
       </a>
-      <a target="_blank" rel="noopener noreferrer" href="https://motrix.app/support">
+      <a target="_blank" rel="noopener noreferrer" href="https://api.tekin.cn/motrix/support">
         {{ $t('about.support') }}
       </a>
-      <a target="_blank" rel="noopener noreferrer" href="https://motrix.app/release">
+      <a target="_blank" rel="noopener noreferrer" href="https://api.tekin.cn/motrix/release">
         {{ $t('about.release') }}
       </a>
     </el-col>

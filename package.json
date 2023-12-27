@@ -2,17 +2,17 @@
   "name": "Motrix",
   "version": "1.8.19",
   "description": "A full-featured download manager",
-  "homepage": "https://motrix.app",
+  "homepage": "https://api.tekin.cn/motrix/",
   "author": {
-    "name": "Dr_rOot",
-    "email": "agalwood.net@gmail.com"
+    "name": "tekintian",
+    "email": "tekintian@gmail.com"
   },
-  "copyright": "Copyright© Dr_rOot",
+  "copyright": "Copyright© Yunnan.ws Inc.",
   "license": "MIT",
   "main": "./dist/electron/main.js",
   "repository": {
     "type": "git",
-    "url": "git@github.com:agalwood/Motrix.git"
+    "url": "git@github.com:tekintian/Motrix.git"
   },
   "scripts": {
     "release": "npm run build --publish onTagOrDraft",
@@ -36,6 +36,9 @@
   },
   "dependencies": {
     "node-fetch": "^2.6.1",
+    "punycode": "^2.3.1",
+    "tr46": "^5.0.0",
+    "whatwg-url": "^14.0.0",
     "ws": "^8.13.0"
   },
   "devDependencies": {
@@ -54,6 +57,7 @@
     "@panter/vue-i18next": "^0.15.2",
     "@vue/eslint-config-standard": "^6.1.0",
     "ajv": "^8.12.0",
+    "app-builder-bin": "^4.0.0",
     "axios": "^1.4.0",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^9.1.2",
@@ -67,6 +71,7 @@
     "css-loader": "^6.7.3",
     "css-minimizer-webpack-plugin": "^5.0.0",
     "del": "^6.1.1",
+    "dotenv": "^16.3.1",
     "electron": "^22.3.9",
     "electron-builder": "^24.4.0",
     "electron-devtools-installer": "^3.2.0",
@@ -104,6 +109,7 @@
     "vue-template-compiler": "^2.7.14",
     "vuex": "^3.6.2",
     "vuex-router-sync": "^5.0.0",
+    "webidl-conversions": "^7.0.0",
     "webpack": "^5.82.1",
     "webpack-cli": "^5.1.1",
     "webpack-dev-server": "^4.15.0",

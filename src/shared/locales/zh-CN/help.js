@@ -1,5 +1,5 @@
 export default {
-  'official-website': 'Motrix 官网',
+  'official-website': '云南网站研发中心',
   'manual': '使用手册',
   'release-notes': '发行说明...',
   'report-problem': '报告问题',

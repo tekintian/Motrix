@@ -1,7 +1,7 @@
 # Motrix
 
 <p>
-  <a href="https://motrix.app">
+  <a href="https://api.tekin.cn/motrix/">
     <img src="./static/512x512.png" width="256" alt="Motrix App Icon" />
   </a>
 </p>
@@ -16,11 +16,11 @@
 
 Motrix 是一款全能的下载工具，支持下载 HTTP、FTP、BT、磁力链等资源。它的界面简洁易用，希望大家喜欢 👻。
 
-✈️ 去 [官网](https://motrix.app/zh-CN) 逛逛  |  📖 查看 [帮助手册](http://motrix.app/support/issues)
+✈️ 去 [官网](https://api.tekin.cn/motrix/zh-CN) 逛逛  |  📖 查看 [帮助手册](http://motrix.app/support/issues)
 
 ## 💽 安装稳定版
 
-[GitHub](https://github.com/agalwood/Motrix/releases) 和 [官网](https://motrix.app/zh-CN) 提供了已经编译好的稳定版安装包，当然你也可以自己克隆代码编译打包。
+[GitHub](https://github.com/agalwood/Motrix/releases) 和 [官网](https://api.tekin.cn/motrix/zh-CN) 提供了已经编译好的稳定版安装包，当然你也可以自己克隆代码编译打包。
 
 ### Windows
 
@@ -56,7 +56,7 @@ brew update && brew install motrix
 ```
 
 #### 自动更新
-Motrix v1.8.0+ 版本更改了应用 BundleID ( `net.agalwood.Motrix` => `app.motrix.native` ), Motrix v1.6.11 的自动更新会因为签名不一致而失败。[Motrix 安装助手](https://github.com/motrixapp/motrix-install-assistant)将帮助您安装最新的 Motrix 应用程序。
+Motrix v1.8.0+ 版本更改了应用 BundleID ( `net.agalwood.Motrix` => `cn.tekin.motrix` ), Motrix v1.6.11 的自动更新会因为签名不一致而失败。[Motrix 安装助手](https://github.com/motrixapp/motrix-install-assistant)将帮助您安装最新的 Motrix 应用程序。
 
 <p>
   <a href="https://github.com/motrixapp/motrix-install-assistant">
