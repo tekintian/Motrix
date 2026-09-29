@@ -122,15 +122,25 @@ export class Aria2RpcClient {
     const nodePath = require('node:path')
     const nodeOs = require('node:os')
     const aria2cPath = this.findAria2cPath()
-    const dir = (options?.dir as string) || nodePath.join(nodeOs.homedir(), 'Downloads')
+    const dir =
+      (options?.dir as string) || nodePath.join(nodeOs.homedir(), 'Downloads')
     const out = (options?.out as string) || `video_${Date.now()}.ts`
-    console.log(`[HLS-Hook] aria2c: ${aria2cPath} -x16 -s16 -k1M -d "${dir}" -o "${out}" "${url.slice(0, 80)}..."`)
+    console.log(
+      `[HLS-Hook] aria2c: ${aria2cPath} -x16 -s16 -k1M -d "${dir}" -o "${out}" "${url.slice(0, 80)}..."`
+    )
     return new Promise<string>((resolve, reject) => {
-      execFile(aria2cPath, ['-x','16','-s','16','-k','1M','--file-allocation=none','-d',dir,'-o',out,url],
-        { cwd: dir, maxBuffer: 10*1024*1024, timeout: 600000 },
+      execFile(
+      aria2cPath,
+      ['-x', '16', '-s', '16', '-k', '1M', '--file-allocation=none', '-d', dir, '-o', out, url],
+      { cwd: dir, maxBuffer: 10 * 1024 * 1024, timeout: 600000 },
         (err: Error | null) => {
-          if (err) { console.error(`[HLS-Hook] failed: ${err.message}`); reject(new Error(`HLS download failed: ${err.message}`)) }
-          else { console.log(`[HLS-Hook] complete: ${out}`); resolve(`hls-${Date.now()}`) }
+          if (err) {
+            console.error(`[HLS-Hook] failed: ${err.message}`)
+            reject(new Error(`HLS download failed: ${err.message}`))
+          } else {
+            console.log(`[HLS-Hook] complete: ${out}`)
+            resolve(`hls-${Date.now()}`)
+          }
         }
       )
     })
@@ -141,7 +151,13 @@ export class Aria2RpcClient {
     const nodePath = require('node:path')
     const exeName = process.platform === 'win32' ? 'aria2c.exe' : 'aria2c'
     const candidates = [
-      nodePath.join(process.resourcesPath || '', 'extra', process.platform, process.arch, exeName),
+      nodePath.join(
+        process.resourcesPath || '',
+        'extra',
+        process.platform,
+        process.arch,
+        exeName
+      ),
       nodePath.join(process.resourcesPath || '', 'extra', exeName),
       exeName,
     ]
