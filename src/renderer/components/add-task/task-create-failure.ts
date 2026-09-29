@@ -56,5 +56,5 @@ const PATH_TOO_LONG = /^task path too long: (\d+)\/(\d+): (.+)$/su
 export function parsePathTooLong(reason: string): PathTooLong | null {
   const match = PATH_TOO_LONG.exec(reason)
   if (!match) return null
-  return { length: match[1]!, limit: match[2]!, path: match[3]! }
+  return { length: match[1] ?? '', limit: match[2] ?? '', path: match[3] ?? '' }
 }

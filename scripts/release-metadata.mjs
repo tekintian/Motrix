@@ -54,7 +54,9 @@ export function resolveReleaseMetadata({
     )
   }
   if (refProtected !== true && refProtected !== 'true') {
-    console.warn(`[fork] Release tag ${refName} is not protected by a ruleset (fork, skipping check)`)
+    console.warn(
+      `[fork] Release tag ${refName} is not protected by a ruleset (fork, skipping check)`
+    )
   }
 
   return tagMetadata

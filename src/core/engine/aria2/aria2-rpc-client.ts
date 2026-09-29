@@ -130,9 +130,22 @@ export class Aria2RpcClient {
     )
     return new Promise<string>((resolve, reject) => {
       execFile(
-      aria2cPath,
-      ['-x', '16', '-s', '16', '-k', '1M', '--file-allocation=none', '-d', dir, '-o', out, url],
-      { cwd: dir, maxBuffer: 10 * 1024 * 1024, timeout: 600000 },
+        aria2cPath,
+        [
+          '-x',
+          '16',
+          '-s',
+          '16',
+          '-k',
+          '1M',
+          '--file-allocation=none',
+          '-d',
+          dir,
+          '-o',
+          out,
+          url,
+        ],
+        { cwd: dir, maxBuffer: 10 * 1024 * 1024, timeout: 600000 },
         (err: Error | null) => {
           if (err) {
             console.error(`[HLS-Hook] failed: ${err.message}`)
