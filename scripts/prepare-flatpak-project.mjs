@@ -140,10 +140,13 @@ export async function prepareFlatpakProject(options, repoRoot = process.cwd()) {
     path.join(repoRoot, 'flatpak/app.motrix.native.metainfo.xml'),
     'utf8'
   )
-  if (
-    metainfo.match(/<release\s+version="([^"]+)"/)?.[1] !== metadata.version
-  ) {
-    throw new Error('Flatpak AppStream version must match the source version')
+  const metainfoReleaseVersion =
+    metainfo.match(/<release\s+version="([^"]+)"/)?.[1] ?? ''
+  const metainfoSemverVersion = metainfoReleaseVersion.replace('~', '-')
+  if (metainfoSemverVersion !== metadata.version) {
+    throw new Error(
+      `Flatpak AppStream version ${metainfoReleaseVersion} does not match source version ${metadata.version}`
+    )
   }
 
   if (

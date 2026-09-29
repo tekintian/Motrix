@@ -174,11 +174,11 @@ describe('release version contract', () => {
       .replace(/\s+/g, ' ')
     const metainfo = read('flatpak/app.motrix.native.metainfo.xml')
     const beta8Metainfo =
-      /<release version="2\.0\.0-beta\.8"[\s\S]*?<\/release>/.exec(
+      /<release version="2\.0\.0~beta\.8"[\s\S]*?<\/release>/.exec(
         metainfo
       )?.[0] ?? ''
     const beta7Metainfo =
-      /<release version="2\.0\.0-beta\.7"[\s\S]*?<\/release>/.exec(
+      /<release version="2\.0\.0~beta\.7"[\s\S]*?<\/release>/.exec(
         metainfo
       )?.[0] ?? ''
 
@@ -269,7 +269,7 @@ describe('release version contract', () => {
       expect(source).not.toMatch(secretLikeIdentifier)
     }
     expect(metainfo).toContain(
-      '<release version="2.0.0-beta.8" date="2026-08-16">'
+      '<release version="2.0.0~beta.8" date="2026-08-16">'
     )
     expect(metainfo).toContain('Unsigned Windows Builder')
     expect(metainfo).toContain(
@@ -288,7 +288,7 @@ describe('release version contract', () => {
       .replace(/\s+/g, ' ')
     const metainfo = read('flatpak/app.motrix.native.metainfo.xml')
     const beta9Metainfo =
-      /<release version="2\.0\.0-beta\.9"[\s\S]*?<\/release>/.exec(
+      /<release version="2\.0\.0~beta\.9"[\s\S]*?<\/release>/.exec(
         metainfo
       )?.[0] ?? ''
     const normalizedBeta9Metainfo = beta9Metainfo.replace(/\s+/g, ' ')
@@ -339,7 +339,7 @@ describe('release version contract', () => {
       expect(source).not.toMatch(secretLikeIdentifier)
     }
     expect(metainfo).toContain(
-      '<release version="2.0.0-beta.9" date="2026-08-16">'
+      '<release version="2.0.0~beta.9" date="2026-08-16">'
     )
     expect(beta9Metainfo).toContain('All five desktop builds')
     expect(normalizedBeta9Metainfo).toContain(
@@ -366,7 +366,7 @@ describe('release version contract', () => {
       .replace(/\s+/g, ' ')
     const metainfo = read('flatpak/app.motrix.native.metainfo.xml')
     const beta10Metainfo =
-      /<release version="2\.0\.0-beta\.10"[\s\S]*?<\/release>/.exec(
+      /<release version="2\.0\.0~beta\.10"[\s\S]*?<\/release>/.exec(
         metainfo
       )?.[0] ?? ''
     const normalizedBeta10Metainfo = beta10Metainfo.replace(/\s+/g, ' ')
@@ -416,7 +416,7 @@ describe('release version contract', () => {
     )
     expect(normalizedChinese).toContain('外部分发 为零')
     expect(metainfo).toContain(
-      '<release version="2.0.0-beta.10" date="2026-08-16">'
+      '<release version="2.0.0~beta.10" date="2026-08-16">'
     )
     expect(normalizedBeta10Metainfo).toContain(
       'All five desktop builds and all three Finalize jobs succeeded'
@@ -438,7 +438,7 @@ describe('release version contract', () => {
     const normalizedChinese = chinese.replace(/\s+/g, ' ')
     const metainfo = read('flatpak/app.motrix.native.metainfo.xml')
     const beta11Metainfo =
-      /<release version="2\.0\.0-beta\.11"[\s\S]*?<\/release>/.exec(
+      /<release version="2\.0\.0~beta\.11"[\s\S]*?<\/release>/.exec(
         metainfo
       )?.[0] ?? ''
     const normalizedBeta11Metainfo = beta11Metainfo.replace(/\s+/g, ' ')
@@ -479,7 +479,7 @@ describe('release version contract', () => {
     )
     expect(normalizedChinese).toContain('外部分发 为零')
     expect(metainfo).toContain(
-      '<release version="2.0.0-beta.11" date="2026-08-16">'
+      '<release version="2.0.0~beta.11" date="2026-08-16">'
     )
     expect(normalizedBeta11Metainfo).toContain(
       'All five desktop builds and all three Finalize jobs succeeded'
@@ -501,7 +501,7 @@ describe('release version contract', () => {
     const normalizedChinese = chinese.replace(/\s+/g, ' ')
     const metainfo = read('flatpak/app.motrix.native.metainfo.xml')
     const beta12Metainfo =
-      /<release version="2\.0\.0-beta\.12"[\s\S]*?<\/release>/.exec(
+      /<release version="2\.0\.0~beta\.12"[\s\S]*?<\/release>/.exec(
         metainfo
       )?.[0] ?? ''
     const normalizedBeta12Metainfo = beta12Metainfo.replace(/\s+/g, ' ')
@@ -576,7 +576,7 @@ describe('release version contract', () => {
       expect(source).not.toMatch(secretLikeIdentifier)
     }
     expect(metainfo).toContain(
-      '<release version="2.0.0-beta.12" date="2026-08-16">'
+      '<release version="2.0.0~beta.12" date="2026-08-16">'
     )
     expect(normalizedBeta12Metainfo).toContain(
       'All five desktop builds, all three Finalize jobs, assembly, the GitHub prerelease, and the R2 update feed completed'
@@ -602,7 +602,7 @@ describe('release version contract', () => {
       .replace(/\s+/g, ' ')
     const metainfo = read('flatpak/app.motrix.native.metainfo.xml')
     const beta17Metainfo =
-      /<release version="2\.0\.0-beta\.17"[\s\S]*?<\/release>/.exec(
+      /<release version="2\.0\.0~beta\.17"[\s\S]*?<\/release>/.exec(
         metainfo
       )?.[0] ?? ''
     const normalizedBeta17Metainfo = beta17Metainfo.replace(/\s+/g, ' ')
@@ -689,7 +689,7 @@ describe('release version contract', () => {
       .replace(/\s+/g, ' ')
     const metainfo = read('flatpak/app.motrix.native.metainfo.xml')
     const beta16Metainfo =
-      /<release version="2\.0\.0-beta\.16"[\s\S]*?<\/release>/.exec(
+      /<release version="2\.0\.0~beta\.16"[\s\S]*?<\/release>/.exec(
         metainfo
       )?.[0] ?? ''
     const normalizedBeta16Metainfo = beta16Metainfo.replace(/\s+/g, ' ')
@@ -773,7 +773,7 @@ describe('release version contract', () => {
       .replace(/\s+/g, ' ')
     const metainfo = read('flatpak/app.motrix.native.metainfo.xml')
     const beta15Metainfo =
-      /<release version="2\.0\.0-beta\.15"[\s\S]*?<\/release>/.exec(
+      /<release version="2\.0\.0~beta\.15"[\s\S]*?<\/release>/.exec(
         metainfo
       )?.[0] ?? ''
     const normalizedBeta15Metainfo = beta15Metainfo.replace(/\s+/g, ' ')
@@ -853,7 +853,7 @@ describe('release version contract', () => {
       .replace(/\s+/g, ' ')
     const metainfo = read('flatpak/app.motrix.native.metainfo.xml')
     const beta14Metainfo =
-      /<release version="2\.0\.0-beta\.14"[\s\S]*?<\/release>/.exec(
+      /<release version="2\.0\.0~beta\.14"[\s\S]*?<\/release>/.exec(
         metainfo
       )?.[0] ?? ''
     const normalizedBeta14Metainfo = beta14Metainfo.replace(/\s+/g, ' ')
@@ -929,7 +929,7 @@ describe('release version contract', () => {
       .replace(/\s+/g, ' ')
     const metainfo = read('flatpak/app.motrix.native.metainfo.xml')
     const beta13Metainfo =
-      /<release version="2\.0\.0-beta\.13"[\s\S]*?<\/release>/.exec(
+      /<release version="2\.0\.0~beta\.13"[\s\S]*?<\/release>/.exec(
         metainfo
       )?.[0] ?? ''
     const normalizedBeta13Metainfo = beta13Metainfo.replace(/\s+/g, ' ')
@@ -992,7 +992,7 @@ describe('release version contract', () => {
       expect(source).not.toMatch(secretLikeIdentifier)
     }
     expect(metainfo).toContain(
-      '<release version="2.0.0-beta.13" date="2026-08-16">'
+      '<release version="2.0.0~beta.13" date="2026-08-16">'
     )
     expect(normalizedBeta13Metainfo).toContain(
       'All desktop builds, Finalize jobs, assembly, the GitHub prerelease, and the R2 update feed completed'
