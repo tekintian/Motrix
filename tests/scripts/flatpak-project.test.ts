@@ -92,7 +92,7 @@ describe('prepare-flatpak-project', () => {
       '<component><releases><release version="1.0.0"/></releases></component>'
     )
     await expect(prepareFlatpakProject(options, root)).rejects.toThrow(
-      'AppStream version must match'
+      /AppStream version.*does not match source version/
     )
   })
 
