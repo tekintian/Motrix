@@ -1133,9 +1133,21 @@ jobs:
 
           const hasAppleCerts = process.env.HAS_APPLE_CERTS === 'true'
           if (!hasAppleCerts) {
-            // Generate a self-signed certificate for ad-hoc signing
+            // Generate a self-signed certificate with Code Signing EKU
             const keyPath = path.join(directory, 'selfsigned.key')
             const certPath = path.join(directory, 'selfsigned.crt')
+            const cnfPath = path.join(directory, 'selfsigned.cnf')
+            fs.writeFileSync(cnfPath, [
+              '[req]',
+              'distinguished_name = dn',
+              'x509_extensions = v3_req',
+              'prompt = no',
+              '[dn]',
+              'CN = Motrix Self-Signed',
+              '[v3_req]',
+              'keyUsage = digitalSignature',
+              'extendedKeyUsage = codeSigning',
+            ].join('\n'), 'utf8')
             const openssl = (args, desc) => {
               const result = spawnSync('openssl', args, {
                 encoding: 'utf8',
@@ -1150,12 +1162,13 @@ jobs:
               'req', '-x509', '-newkey', 'rsa:2048',
               '-keyout', keyPath, '-out', certPath,
               '-days', '1', '-nodes',
-              '-subj', '/CN=Motrix Self-Signed',
+              '-config', cnfPath,
             ], 'generation')
             openssl([
               'pkcs12', '-export', '-out', certificatePath,
               '-inkey', keyPath, '-in', certPath,
               '-passout', 'pass:selfsigned',
+              '-certpbe', 'PBE-SHA1-3DES', '-keypbe', 'PBE-SHA1-3DES', '-macalg', 'SHA1',
             ], 'PKCS#12 export')
             fs.chmodSync(certificatePath, 0o600)
             process.exit(0)
@@ -1288,6 +1301,8 @@ jobs:
               shell: false,
             })
             if (result.error || result.status !== 0) {
+              console.error(`security ${operation} stderr:`, result.stderr)
+              console.error(`security ${operation} stdout:`, result.stdout)
               throw new Error(`macOS signing keychain ${operation} failed`)
             }
             return result.stdout
@@ -1339,18 +1354,25 @@ jobs:
             ],
             'certificate import'
           )
-          security(
-            [
-              'set-key-partition-list',
-              '-S',
-              'apple-tool:,apple:',
-              '-s',
-              '-k',
-              keychainPassword,
-              keychainPath,
-            ],
-            'partition configuration'
-          )
+          if (hasAppleCerts) {
+            security(
+              [
+                'set-key-partition-list',
+                '-S',
+                'apple-tool:,apple:',
+                '-s',
+                '-k',
+                keychainPassword,
+                keychainPath,
+              ],
+              'partition configuration'
+            )
+          } else {
+            security(
+              ['set-key-partition-list', '-S', 'apple-tool:,apple:', '-k', keychainPassword, keychainPath],
+              'partition configuration'
+            )
+          }
           security(
             [
               'list-keychains',
