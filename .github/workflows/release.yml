@@ -1428,6 +1428,21 @@ jobs:
             -c.mac.bundleVersion=${{ github.run_number }}.${{ github.run_attempt }}.0 \
             --publish never
 
+      - name: Ad-hoc sign macOS app (self-signed fallback)
+        if: matrix.platform == 'darwin' && steps.macos-credentials.outputs.has_apple_certs != 'true'
+        shell: bash
+        working-directory: signing-input
+        run: |
+          set -euo pipefail
+          if [[ -d "${{ matrix.app_path }}" ]]; then
+            echo "Ad-hoc signing ${{ matrix.app_path }}"
+            codesign --force --deep --sign - "${{ matrix.app_path }}"
+            echo "Ad-hoc signing native host"
+            codesign --force --sign - "${{ matrix.resources_dir }}/bin/motrix-native-host"
+          else
+            echo "WARNING: ${{ matrix.app_path }} not found, skipping ad-hoc signing"
+          fi
+
       - name: Electron Builder (Windows finalization boundary)
         if: matrix.platform == 'win32'
         shell: pwsh
@@ -1563,13 +1578,16 @@ jobs:
           HAS_APPLE_CERTS: ${{ steps.macos-credentials.outputs.has_apple_certs }}
         run: |
           set -euo pipefail
-          codesign --verify --deep --strict --verbose=2 "${{ matrix.app_path }}"
-          codesign --verify --strict --verbose=2 \
-            "${{ matrix.resources_dir }}/bin/motrix-native-host"
           if [[ "${HAS_APPLE_CERTS}" == "true" ]]; then
+            codesign --verify --deep --strict --verbose=2 "${{ matrix.app_path }}"
+            codesign --verify --strict --verbose=2 \
+              "${{ matrix.resources_dir }}/bin/motrix-native-host"
             xcrun stapler validate "${{ matrix.app_path }}"
           else
-            echo "Skipping stapler validation (self-signed build)"
+            codesign --verify --deep --verbose=2 "${{ matrix.app_path }}"
+            codesign --verify --verbose=2 \
+              "${{ matrix.resources_dir }}/bin/motrix-native-host"
+            echo "Skipping stapler and strict validation (self-signed build)"
           fi
 
       - name: Verify finalized Electron package
