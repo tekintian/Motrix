@@ -1065,6 +1065,7 @@ jobs:
           NODE
 
       - name: Validate macOS release credentials
+        id: macos-credentials
         if: matrix.platform == 'darwin'
         shell: bash
         env:
@@ -1075,13 +1076,26 @@ jobs:
           API_KEY_ISSUER_ID: ${{ secrets.API_KEY_ISSUER_ID }}
         run: |
           set -euo pipefail
+          has_all=true
           for name in MAC_CERTS MAC_CERTS_PASSWORD API_KEY API_KEY_ID API_KEY_ISSUER_ID; do
-            [[ -n "${!name:-}" ]] || { echo "Missing $name" >&2; exit 1; }
+            if [[ -z "${!name:-}" ]]; then
+              has_all=false
+              echo "Missing $name" >&2
+            fi
           done
+          if [[ "$has_all" == "true" ]]; then
+            echo "has_apple_certs=true" >> "$GITHUB_OUTPUT"
+            echo "signing_mode=apple" >> "$GITHUB_OUTPUT"
+            echo "macOS release credentials validated (Apple Developer)"
+          else
+            echo "has_apple_certs=false" >> "$GITHUB_OUTPUT"
+            echo "signing_mode=selfsigned" >> "$GITHUB_OUTPUT"
+            echo "WARNING: Apple Developer credentials incomplete — falling back to self-signed certificate" >&2
+          fi
 
       - name: Prepare Apple API Key
         id: apple-api-key
-        if: matrix.platform == 'darwin'
+        if: matrix.platform == 'darwin' && steps.macos-credentials.outputs.has_apple_certs == 'true'
         shell: bash
         env:
           APPLE_API_KEY_CONTENT: ${{ secrets.API_KEY }}
@@ -1100,9 +1114,53 @@ jobs:
         env:
           MAC_CERTS_BASE64: ${{ secrets.MAC_CERTS }}
           CERTIFICATE_PARENT: ${{ runner.temp }}
+          HAS_APPLE_CERTS: ${{ steps.macos-credentials.outputs.has_apple_certs }}
         run: |
           const fs = require('node:fs')
           const path = require('node:path')
+          const { spawnSync } = require('node:child_process')
+          const parent = path.resolve(process.env.CERTIFICATE_PARENT)
+          const directory = fs.mkdtempSync(
+            path.join(parent, 'motrix-mac-certificate-')
+          )
+          fs.chmodSync(directory, 0o700)
+          const certificatePath = path.join(directory, 'identity.p12')
+          fs.appendFileSync(
+            process.env.GITHUB_OUTPUT,
+            `directory=${directory}\npath=${certificatePath}\n`,
+            'utf8'
+          )
+
+          const hasAppleCerts = process.env.HAS_APPLE_CERTS === 'true'
+          if (!hasAppleCerts) {
+            // Generate a self-signed certificate for ad-hoc signing
+            const keyPath = path.join(directory, 'selfsigned.key')
+            const certPath = path.join(directory, 'selfsigned.crt')
+            const openssl = (args, desc) => {
+              const result = spawnSync('openssl', args, {
+                encoding: 'utf8',
+                maxBuffer: 1024 * 1024,
+                shell: false,
+              })
+              if (result.error || result.status !== 0) {
+                throw new Error(`self-signed certificate ${desc} failed: ${result.stderr}`)
+              }
+            }
+            openssl([
+              'req', '-x509', '-newkey', 'rsa:2048',
+              '-keyout', keyPath, '-out', certPath,
+              '-days', '1', '-nodes',
+              '-subj', '/CN=Motrix Self-Signed',
+            ], 'generation')
+            openssl([
+              'pkcs12', '-export', '-out', certificatePath,
+              '-inkey', keyPath, '-in', certPath,
+              '-passout', 'pass:selfsigned',
+            ], 'PKCS#12 export')
+            fs.chmodSync(certificatePath, 0o600)
+            process.exit(0)
+          }
+
           const encoded = process.env.MAC_CERTS_BASE64
           const maximumEncodedBytes = 128 * 1024
           const maximumCertificateBytes = 96 * 1024
@@ -1172,17 +1230,6 @@ jobs:
           ) {
             throw new Error('macOS signing certificate is not a P12 container')
           }
-          const parent = path.resolve(process.env.CERTIFICATE_PARENT)
-          const directory = fs.mkdtempSync(
-            path.join(parent, 'motrix-mac-certificate-')
-          )
-          fs.chmodSync(directory, 0o700)
-          const certificatePath = path.join(directory, 'identity.p12')
-          fs.appendFileSync(
-            process.env.GITHUB_OUTPUT,
-            `directory=${directory}\npath=${certificatePath}\n`,
-            'utf8'
-          )
           fs.writeFileSync(certificatePath, certificate, {
             flag: 'wx',
             mode: 0o600,
@@ -1197,6 +1244,7 @@ jobs:
           MAC_CERTIFICATE_PATH: ${{ steps.mac-certificate.outputs.path }}
           MAC_CERTS_PASSWORD: ${{ secrets.MAC_CERTS_PASSWORD }}
           KEYCHAIN_PARENT: ${{ runner.temp }}
+          HAS_APPLE_CERTS: ${{ steps.macos-credentials.outputs.has_apple_certs }}
         run: |
           const { spawnSync } = require('node:child_process')
           const crypto = require('node:crypto')
@@ -1215,8 +1263,11 @@ jobs:
           ) {
             throw new Error('macOS signing certificate is outside runner temp')
           }
-          const certificatePassword = process.env.MAC_CERTS_PASSWORD
-          if (!certificatePassword) {
+          const hasAppleCerts = process.env.HAS_APPLE_CERTS === 'true'
+          const certificatePassword = hasAppleCerts
+            ? process.env.MAC_CERTS_PASSWORD
+            : 'selfsigned'
+          if (hasAppleCerts && !certificatePassword) {
             throw new Error('macOS signing certificate password is missing')
           }
           const directory = fs.mkdtempSync(
@@ -1315,8 +1366,11 @@ jobs:
             ['find-identity', '-v', '-p', 'codesigning', keychainPath],
             'identity verification'
           )
-          if (!/Developer ID Application:/u.test(identities)) {
+          if (hasAppleCerts && !/Developer ID Application:/u.test(identities)) {
             throw new Error('macOS signing identity is unavailable')
+          }
+          if (!hasAppleCerts && identities.trim().length === 0) {
+            throw new Error('macOS self-signed signing identity is unavailable')
           }
 
       - name: Electron Builder (macOS signing boundary)
@@ -1332,6 +1386,7 @@ jobs:
           APPLE_API_KEY: ${{ steps.apple-api-key.outputs.path }}
           APPLE_API_KEY_ID: ${{ secrets.API_KEY_ID }}
           APPLE_API_ISSUER: ${{ secrets.API_KEY_ISSUER_ID }}
+          HAS_APPLE_CERTS: ${{ steps.macos-credentials.outputs.has_apple_certs }}
         run: |
           set -euo pipefail
           unset ELECTRON_BUILDER_BINARIES_CUSTOM_DIR
@@ -1340,6 +1395,11 @@ jobs:
           unset npm_package_config_electron_builder_binaries_custom_dir
           unset CSC_LINK
           unset CSC_KEY_PASSWORD
+          if [[ "${HAS_APPLE_CERTS}" != "true" ]]; then
+            unset APPLE_API_KEY
+            unset APPLE_API_KEY_ID
+            unset APPLE_API_ISSUER
+          fi
           node "$ELECTRON_BUILDER_CLI" \
             --config electron-builder.signing.json \
             ${{ matrix.electron_builder_args }} \
@@ -1477,12 +1537,18 @@ jobs:
         if: matrix.platform == 'darwin'
         shell: bash
         working-directory: signing-input
+        env:
+          HAS_APPLE_CERTS: ${{ steps.macos-credentials.outputs.has_apple_certs }}
         run: |
           set -euo pipefail
           codesign --verify --deep --strict --verbose=2 "${{ matrix.app_path }}"
           codesign --verify --strict --verbose=2 \
             "${{ matrix.resources_dir }}/bin/motrix-native-host"
-          xcrun stapler validate "${{ matrix.app_path }}"
+          if [[ "${HAS_APPLE_CERTS}" == "true" ]]; then
+            xcrun stapler validate "${{ matrix.app_path }}"
+          else
+            echo "Skipping stapler validation (self-signed build)"
+          fi
 
       - name: Verify finalized Electron package
         working-directory: signing-input
