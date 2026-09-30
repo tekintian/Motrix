@@ -320,15 +320,9 @@ async function main(argv = process.argv.slice(2)) {
       try {
         await access(bin)
         await execFileAsync('codesign', ['--force', '--sign', '-', bin])
-      } catch {
-      }
+      } catch {}
     }
-    await execFileAsync('codesign', [
-      '--force',
-      '--sign',
-      '-',
-      layout.appDir,
-    ])
+    await execFileAsync('codesign', ['--force', '--sign', '-', layout.appDir])
     await execFileAsync('codesign', [
       '--verify',
       '--deep',
