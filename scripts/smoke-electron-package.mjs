@@ -312,6 +312,23 @@ async function main(argv = process.argv.slice(2)) {
       '-',
       layout.appDir,
     ])
+    const nestedBinaries = [
+      path.join(layout.resources, 'bin/motrix-native-host'),
+      path.join(layout.resources, 'bin/motrix-finalize-fs'),
+    ]
+    for (const bin of nestedBinaries) {
+      try {
+        await access(bin)
+        await execFileAsync('codesign', ['--force', '--sign', '-', bin])
+      } catch {
+      }
+    }
+    await execFileAsync('codesign', [
+      '--force',
+      '--sign',
+      '-',
+      layout.appDir,
+    ])
     await execFileAsync('codesign', [
       '--verify',
       '--deep',

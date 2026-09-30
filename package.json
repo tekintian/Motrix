@@ -82,7 +82,7 @@
     "fetch:engine": "node scripts/fetch-engine.mjs",
     "rebuild:for-node": "pnpm rebuild better-sqlite3",
     "rebuild:for-electron": "electron-rebuild --force --only better-sqlite3",
-    "pack:mac": "pnpm run check:third-party-notices && pnpm run build:mac-arm64 && pnpm run stage:electron -- --platform darwin --arch arm64 && CSC_IDENTITY_AUTO_DISCOVERY=false pnpm exec electron-builder --mac --arm64 -c.mac.target=dir && codesign --force --deep --sign - release/mac-arm64/Motrix.app",
+    "pack:mac": "pnpm run check:third-party-notices && pnpm run build:mac-arm64 && pnpm run stage:electron -- --platform darwin --arch arm64 && CSC_IDENTITY_AUTO_DISCOVERY=false pnpm exec electron-builder --mac --arm64 -c.mac.target=dir && codesign --force --deep --sign - release/mac-arm64/Motrix.app && codesign --force --sign - release/mac-arm64/Motrix.app/Contents/Resources/bin/motrix-native-host && codesign --force --sign - release/mac-arm64/Motrix.app/Contents/Resources/bin/motrix-finalize-fs && codesign --force --sign - release/mac-arm64/Motrix.app",
     "dist:mac": "pnpm run check:third-party-notices && pnpm run build:mac-arm64 && pnpm run stage:electron -- --platform darwin --arch arm64 && CSC_IDENTITY_AUTO_DISCOVERY=false pnpm exec electron-builder --mac --arm64 --publish never",
     "release:mac": "pnpm run check:third-party-notices && pnpm run build:mac-arm64 && pnpm run stage:electron -- --platform darwin --arch arm64 && pnpm exec electron-builder --mac --arm64 --publish never"
   },

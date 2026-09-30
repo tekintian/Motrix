@@ -1434,14 +1434,24 @@ jobs:
         working-directory: signing-input
         run: |
           set -euo pipefail
-          if [[ -d "${{ matrix.app_path }}" ]]; then
-            echo "Ad-hoc signing ${{ matrix.app_path }}"
-            codesign --force --deep --sign - "${{ matrix.app_path }}"
-            echo "Ad-hoc signing native host"
-            codesign --force --sign - "${{ matrix.resources_dir }}/bin/motrix-native-host"
-          else
+          if [[ ! -d "${{ matrix.app_path }}" ]]; then
             echo "WARNING: ${{ matrix.app_path }} not found, skipping ad-hoc signing"
+            exit 0
           fi
+          echo "=== Step 1: Deep-sign the app bundle (frameworks + helpers) ==="
+          codesign --force --deep --sign - "${{ matrix.app_path }}"
+          echo "=== Step 2: Explicitly sign nested Mach-O executables in Resources/bin/ ==="
+          echo "  (--deep may compute the outer seal before signing these non-standard-location binaries)"
+          for bin in "${{ matrix.resources_dir }}/bin/motrix-native-host" \
+                     "${{ matrix.resources_dir }}/bin/motrix-finalize-fs"; do
+            if [[ -f "$bin" ]]; then
+              codesign --force --sign - "$bin"
+            else
+              echo "WARNING: $bin not found, skipping"
+            fi
+          done
+          echo "=== Step 3: Re-sign the outer bundle (without --deep) to fix the resource seal ==="
+          codesign --force --sign - "${{ matrix.app_path }}"
 
       - name: Electron Builder (Windows finalization boundary)
         if: matrix.platform == 'win32'
@@ -1582,11 +1592,15 @@ jobs:
             codesign --verify --deep --strict --verbose=2 "${{ matrix.app_path }}"
             codesign --verify --strict --verbose=2 \
               "${{ matrix.resources_dir }}/bin/motrix-native-host"
+            codesign --verify --strict --verbose=2 \
+              "${{ matrix.resources_dir }}/bin/motrix-finalize-fs"
             xcrun stapler validate "${{ matrix.app_path }}"
           else
             codesign --verify --deep --verbose=2 "${{ matrix.app_path }}"
             codesign --verify --verbose=2 \
               "${{ matrix.resources_dir }}/bin/motrix-native-host"
+            codesign --verify --verbose=2 \
+              "${{ matrix.resources_dir }}/bin/motrix-finalize-fs"
             echo "Skipping stapler and strict validation (self-signed build)"
           fi
 
