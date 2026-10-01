@@ -2671,7 +2671,7 @@ describe('release workflow publication contract', () => {
       stringField(asRecord(config.directories, 'signing directories'), 'app')
     ).toBe('dist/electron-app')
     expect(stringField(config, 'electronDist')).toBe('trusted/electron.zip')
-    expect(stringField(config, 'electronVersion')).toBe('44.4.3')
+    expect(stringField(config, 'electronVersion')).toBe('43.7.7')
     expect(signingInputSource).toContain(
       "config.directories?.app !== 'dist/electron-app'"
     )
@@ -2737,7 +2737,7 @@ describe('release workflow publication contract', () => {
       asRecord(metadata.devDependencies, 'dev dependencies'),
       'electron'
     )
-    expect(version).toBe('44.4.3')
+    expect(version).toBe('43.7.7')
     expect(
       stringField(
         asRecord(
@@ -2778,12 +2778,12 @@ describe('release workflow publication contract', () => {
     )
     const macConfig = asRecord(builderConfig.mac, 'electron-builder mac config')
 
-    expect(stringField(macConfig, 'minimumSystemVersion')).toBe('13.0')
+    expect(stringField(macConfig, 'minimumSystemVersion')).toBe('12.0')
     expect(stringField(macConfig, 'artifactName')).toMatch(/\$\{arch\}/)
     for (const workflow of [ciWorkflow, releaseWorkflow]) {
       const { job } = targetMatrix(workflow)
       const env = asRecord(job.env, 'target job environment')
-      expect(stringField(env, 'MACOSX_DEPLOYMENT_TARGET')).toContain('13.0')
+      expect(stringField(env, 'MACOSX_DEPLOYMENT_TARGET')).toContain('12.0')
     }
   })
 

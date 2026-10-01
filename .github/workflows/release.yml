@@ -170,7 +170,7 @@ jobs:
     env:
       # Electron 44 requires macOS 13 even though the locked aria2 binaries
       # themselves are built with an 11.0 deployment target.
-      MACOSX_DEPLOYMENT_TARGET: ${{ matrix.platform == 'darwin' && '13.0' || '' }}
+      MACOSX_DEPLOYMENT_TARGET: ${{ matrix.platform == 'darwin' && '12.0' || '' }}
 
     steps:
       - name: Checkout
@@ -627,7 +627,7 @@ jobs:
       ELECTRON_BUILDER_OSSL_SIGNCODE_PATH: ''
       ELECTRON_BUILDER_RCEDIT_PATH: ''
       ELECTRON_BUILDER_WINDOWS_KITS_PATH: ''
-      MACOSX_DEPLOYMENT_TARGET: ${{ matrix.platform == 'darwin' && '13.0' || '' }}
+      MACOSX_DEPLOYMENT_TARGET: ${{ matrix.platform == 'darwin' && '12.0' || '' }}
       NPM_CONFIG_ELECTRON_BUILDER_BINARIES_CUSTOM_DIR: ''
       NPM_CONFIG_ELECTRON_BUILDER_BINARIES_MIRROR: ''
       SIGNTOOL_PATH: ''
@@ -1049,7 +1049,7 @@ jobs:
           cp \
             signing-input/signing-policy/installer.nsh \
             signing-input/trusted/installer.nsh
-          url="https://github.com/electron/electron/releases/download/v44.4.3/electron-v44.4.3-${{ matrix.platform }}-${{ matrix.arch }}.zip"
+          url="https://github.com/electron/electron/releases/download/v43.7.7/electron-v43.7.7-${{ matrix.platform }}-${{ matrix.arch }}.zip"
           curl --fail --location --proto '=https' --tlsv1.2 \
             "$url" --output signing-input/trusted/electron.zip
           node - <<'NODE'

@@ -105,7 +105,7 @@
     "@types/yauzl": "^3.4.0",
     "@vitest/coverage-v8": "^5.0.1",
     "cross-spawn": "^7.0.6",
-    "electron": "44.4.3",
+    "electron": "43.7.7",
     "electron-builder": "26.15.7",
     "esbuild": "^0.28.2",
     "js-yaml": "^5.4.2",
@@ -175,5 +175,13 @@
   },
   "optionalDependencies": {
     "electron-liquid-glass": "^1.1.1"
+  },
+  "workspaces": [
+    ".",
+    "packages/*"
+  ],
+  "overrides": {
+    "@xmldom/xmldom@": "0.8.15",
+    "qs@": "6.16.0"
   }
 }

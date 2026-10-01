@@ -6,6 +6,11 @@
   "toolsets": {
     "appimage": "1.0.3"
   },
+  "electronLanguages": [
+    "ar", "bg", "ca", "de", "el", "en-US", "es", "fa", "fr",
+    "id", "it", "ja", "ko", "nb", "nl", "pl", "pt-BR", "ro",
+    "ru", "th", "tr", "uk", "vi", "zh-CN", "zh-TW"
+  ],
   "asar": true,
   "asarUnpack": [
     "**/node_modules/{better-sqlite3,bindings,file-uri-to-path}/**",
@@ -92,7 +97,7 @@
     "artifactName": "${productName}-${version}-${arch}.${ext}",
     "bundleShortVersion": "2.0.0",
     "bundleVersion": "2.0.1",
-    "minimumSystemVersion": "13.0",
+    "minimumSystemVersion": "12.0",
     "hardenedRuntime": true,
     "gatekeeperAssess": false,
     "entitlements": "build/entitlements.mac.plist",
@@ -136,6 +141,7 @@
     ]
   },
   "dmg": {
+    "compress": "bzip2",
     "window": { "width": 540, "height": 380 },
     "contents": [
       { "x": 410, "y": 230, "type": "link", "path": "/Applications" },
